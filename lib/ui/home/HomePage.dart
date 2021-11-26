@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:firebase_core/firebase_core.dart'as fire;
+import 'package:firebase_database/firebase_database.dart' ;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fot_test/data/product.dart';
 import 'package:fot_test/ui/Constant/SmartKitColor.dart';
 import 'package:fot_test/ui/Constant/SmartKitProConstant.dart';
 import 'package:fot_test/ui/helper/DataConfig.dart';
@@ -24,12 +28,41 @@ class _HomePageState extends State<HomePage> {
   TextEditingController edtsearch = TextEditingController();
   int slidercurrimg = 0, selectedserviceid = 1;
    Timer slidertimer;
+   FirebaseDatabase database;
+   FirebaseApp  app;
+   String dataFromFirebase="no data";
+  DatabaseReference base;
+
+
+   void startRealTimeFirebase()async{
+
+     app  =  await Firebase.initializeApp();
+       database = FirebaseDatabase(app: app);
+     base =database.reference().child("product").child(
+         FirebaseAuth.instance.currentUser.uid
+     );
+     base.onChildAdded.listen((data) {
+
+       print(data.snapshot.value.toString());
+
+       setState(() {
+         dataFromFirebase=data.snapshot.value.toString();
+       });
+
+
+
+     });
+
+   }
 
 
 
   @override
   void initState() {
     super.initState();
+
+    startRealTimeFirebase();
+
     slidertimer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (slidercurrimg < DataConfig.sliderList.length - 1) {
         slidercurrimg++;
@@ -39,6 +72,10 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {});
     });
+
+
+
+
   }
 
   @override
@@ -63,6 +100,30 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
             searchWidget(),
+            SizedBox(height: 20,),
+            TextButton(onPressed: () {
+              String name=edtsearch.text;
+              Product p=Product(name,25,false);
+
+
+
+
+
+              //add
+
+              base.push().set(p.toJson()).then((response) {
+
+
+              }).whenComplete(() {
+                print("yes");
+              }).onError((error, stackTrace) {
+
+                print(error.toString());
+              });
+
+            }, child: Text("add")),
+            SizedBox(height: 20,),
+            Text(dataFromFirebase),
             sliderWidget(),
             SizedBox(height: 15),
             serviceWidget(),
@@ -78,6 +139,20 @@ class _HomePageState extends State<HomePage> {
             allShopWidget(),
           ]),
         ),
+        floatingActionButton: FloatingActionButton(onPressed: ()  async {
+
+
+
+
+
+
+
+
+
+
+
+
+        },),
       ),
     );
   }
@@ -93,6 +168,7 @@ class _HomePageState extends State<HomePage> {
           decoration: DesignConfig.newInnerDecoration(30),
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: TextFormField(
+
             style: TextStyle(color: salonappcolor),
             cursorColor: salonappcolor,
             decoration: InputDecoration(

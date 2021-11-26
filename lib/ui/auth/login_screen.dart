@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fot_test/ui/auth/register_screen.dart';
+import 'package:fot_test/ui/home/HomePage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key key}) : super(key: key);
@@ -52,9 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
 
 
-                  print(userCredential.user.email);
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text("seccuss")));
+                  Navigator.of(context).push(MaterialPageRoute(builder:(context) =>  HomePage()));
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'user-not-found') {
                     print('No user found for that email.');
