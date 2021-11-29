@@ -30,8 +30,9 @@ class _HomePageState extends State<HomePage> {
    Timer slidertimer;
    FirebaseDatabase database;
    FirebaseApp  app;
+   DatabaseReference base;
    String dataFromFirebase="no data";
-  DatabaseReference base;
+
 
 
    void startRealTimeFirebase()async{
@@ -45,9 +46,7 @@ class _HomePageState extends State<HomePage> {
 
        print(data.snapshot.value.toString());
 
-       setState(() {
-         dataFromFirebase=data.snapshot.value.toString();
-       });
+
 
 
 
