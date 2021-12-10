@@ -9,6 +9,7 @@ abstract class InalizeHelper{
 
     app  =  await Firebase.initializeApp();
     database = FirebaseDatabase(app: app);
+    // FirebaseUser firebaseUser= await   FirebaseAuth.instance.currentUser();
     base =database.reference().child("product").child(
         FirebaseAuth.instance.currentUser.uid
     );
