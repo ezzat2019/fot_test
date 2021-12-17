@@ -4,7 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fot_test/data/add/product_model.dart';
+import 'package:fot_test/data/add/rating_model.dart';
 import 'package:fot_test/ui/home/product_detaitls_screen.dart';
 
 class AllProductScreen extends StatefulWidget {
@@ -37,7 +39,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
     base.onChildAdded.listen((event) {
 
 
-
+print(event.snapshot.value.toString());
 
        ProductModel p=ProductModel.fromJson(event.snapshot.value);
       allProducts.add(p);
@@ -164,7 +166,26 @@ class _AllProductScreenState extends State<AllProductScreen> {
                                       color: Colors.white, fontSize: 18),
                                 )
                               ],
-                            )
+                            ),
+                            SizedBox(height: 8,),
+                            RatingBar.builder(
+
+
+                              initialRating:
+                                  finalRate([2.5,0,0,5])
+                              ,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+
+                              itemCount: 5,
+                              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              ),
+                              onRatingUpdate:null,
+                            ),
                           ],
                         ),
                       ),
@@ -178,5 +199,19 @@ class _AllProductScreenState extends State<AllProductScreen> {
         )
 
     );
+  }
+
+  double finalRate(List<double> list){
+    double v1=0.0;
+    double total=0.0;
+    for(int i=0; i<list.length;i++)
+      {
+
+         total+=list[i];
+
+      }
+    v1=total/list.length;
+    return v1;
+
   }
 }

@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fot_test/data/add/product_model.dart';
 import 'package:fot_test/ui/home/all_product_screen.dart';
 
@@ -22,6 +23,7 @@ class _AddScreenState extends State<AddScreen> {
   final TextEditingController imgCon=TextEditingController();
   FirebaseDatabase database;
   FirebaseApp  app;
+  double ratingEnd=0.0;
   DatabaseReference base;
 
   void startRealTimeFirebase()async{
@@ -66,10 +68,38 @@ class _AddScreenState extends State<AddScreen> {
                   labelText: "product price"
               ),),
               SizedBox(height: 20,),
+              RatingBar.builder(
+                initialRating: 3,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.favorite,
+                  color: Colors.red,
+                ),
+                onRatingUpdate: (rating) {
+
+                  setState(() {
+                    ratingEnd=rating;
+                  });
+
+
+
+
+
+
+
+                },
+              ),
+
+              SizedBox(height: 20,),
               TextField(
                 controller: imgCon,
                 keyboardType: TextInputType.text,
                 onSubmitted: (img_url) {
+
 
                   String name1=nameCon.text.trim();
                   double price1=double.parse(priceCon.text.trim());
@@ -78,7 +108,8 @@ class _AddScreenState extends State<AddScreen> {
                   ProductModel prduct=ProductModel(
                     name: name1,
                     price: price1,
-                    imgUrl: url
+                    imgUrl: url,
+                    // rate: ratingEnd
                   );
 
 
@@ -99,6 +130,8 @@ class _AddScreenState extends State<AddScreen> {
                       );
                     },
                   );
+
+
                   base.push().set(prduct.toJson()).whenComplete(() {
 
                     Navigator.of(context).pop();

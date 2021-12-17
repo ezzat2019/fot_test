@@ -4,6 +4,7 @@ import 'package:fot_test/generated/l10n.dart';
 import 'package:fot_test/ui/auth/register_screen.dart';
 import 'package:fot_test/ui/home/HomePage.dart';
 import 'package:fot_test/ui/home/add/add_screen.dart';
+import 'package:fot_test/ui/rating_bar_screen.dart';
 import 'package:fot_test/utils/helpers/api_helper.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -111,6 +112,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
                 },child: Text(S.of(context).change),),
+                SizedBox(height: 30,),
+                ElevatedButton(onPressed: () {
+
+
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) =>
+                    RatingBarScreen() ,));
+
+
+                },child: Text("rating bar"),),
                 SizedBox(height: 200,),
               ],
             ),
